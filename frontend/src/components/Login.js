@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,useContext  } from "react";
 import axios from "axios";
 import { useNavigate,Navigate, Link } from "react-router-dom";
 import "./Login.css";
 import backendBaseUrl from "./config";
+import { useMsal } from "@azure/msal-react";
+import { AppContext } from "../App";
 
 
-function Login({instance}) {
+
+function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-   
+    const { instance, accounts, inProgress } = useMsal();
+    const { setUserLogged } = useContext(AppContext);
+    useEffect(()=>{
+        if (accounts.length > 0) {
+            setUserLogged(true)
+        }
+    },[accounts])
 
     async function submit(e) {
         e.preventDefault();
@@ -73,16 +82,3 @@ function Login({instance}) {
 
 
 export default Login;
-
-// if (accounts.length > 0) {
-//     return <span>There are currently {accounts.length} users signed in!</span>
-// } else if (inProgress === "login") {
-//     return <span>Login is currently in progress!</span>
-// } else {
-//     return (
-//         <>
-//             <span>There are currently no users signed in!</span>
-//             <button onClick={() => instance.loginPopup()}>Login</button>
-//         </>
-//     );
-// }

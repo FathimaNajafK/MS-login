@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Welcome.css";
+import { AppContext } from "../App";
 import backendBaseUrl from "./config";
 
 function Welcome() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { name } = location.state;
+    const { name } = location.state ? location.state : "";
     const [output, setOutput] = useState("");
     const [permissions, setPermissions] = useState({});
     const [showInputSide, setShowInputSide] = useState(false);
@@ -20,6 +21,8 @@ function Welcome() {
     const [Xmin, setXmin] = useState(0);
     const [Xmax, setXmax] = useState(0);
     const [coordinates, setCoordinates] = useState([]);
+    const {setUserLogged } = useContext(AppContext);
+
 
     useEffect(() => {
         const fetchPermissions = async () => {
@@ -87,6 +90,7 @@ function Welcome() {
     const handleLogout = () => {
         localStorage.removeItem('user');
         sessionStorage.removeItem('user');
+        setUserLogged(false)
         navigate("/");
     };
 
